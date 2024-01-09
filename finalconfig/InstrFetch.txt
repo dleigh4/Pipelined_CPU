@@ -1,0 +1,61 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module InstrFetch(/*Input*/clk, init, FetchMuxDataMid, FetchMuxDataBot, FetchMuxSelect1, FetchMuxSelect2, /*Output*/ FetchInstrOut, FetchPcBuffOut, pc);
+
+// clock:
+input clk;
+wire clk;
+
+// mux data:
+wire [31:0] FetchMuxDataTop;
+input [31:0] FetchMuxDataMid;
+input [31:0] FetchMuxDataBot;
+input init;
+
+// mux selects:
+input FetchMuxSelect1; // from general jump
+input FetchMuxSelect2; // from jump mem
+
+// outputs: instruction and pc value
+output wire [31:0] FetchInstrOut;
+output wire [7:0] FetchPcBuffOut;
+
+// internal values
+wire [15:0] pcOut;
+wire [31:0] dummy;
+wire [31:0] muxOut;
+reg intsel1, intsel2;
+
+
+// expose pc value
+output reg [31:0] pc;
+
+
+
+// internal components:
+pc Pc(clk, muxOut[15:0], pcOut);
+pcbuff PcBuff(clk, pcOut, FetchPcBuffOut);
+instrmem IMem(clk, pcOut, FetchInstrOut);
+mux41b32 mux(FetchMuxDataTop, FetchMuxDataMid, FetchMuxDataBot, dummy, intsel2, intsel1, muxOut);
+adder32 adder(1, {16'b0, pcOut}, FetchMuxDataTop);
+
+always@(init, FetchMuxSelect1, FetchMuxSelect2)
+begin
+    if (init == 1)
+    begin
+        intsel2 = 0;
+        intsel1 = 0;
+    end
+    else
+    begin
+        intsel2 = FetchMuxSelect2;
+        intsel1 = FetchMuxSelect1;
+    end
+end
+
+
+always@(pcOut)
+    pc = pcOut;
+
+endmodule

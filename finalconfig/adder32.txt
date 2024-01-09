@@ -1,0 +1,20 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module adder32(in1, in2, out);
+
+// define in1 and in2 as inputs
+input [31:0] in1, in2;
+
+// define out to be a reg
+output reg [31:0] out;
+
+initial
+    out = 0;
+
+// define behavior as clock rises:
+always@(in1, in2)
+begin
+    out = in1 + in2;
+end
+endmodule

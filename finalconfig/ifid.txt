@@ -1,0 +1,40 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module IfId(/*Input*/clk, IfIdInstrIn, IfIdPcBuffIn, IfIdWrtAddrIn, IfIdDataIn, IfIdWrtIn,/*Output*/ IfIdRegWrtOut, IfIdMemToRegOut, IfIdPcToRegOut, IfIdBnOut, IfIdBzOut, IfIdJmpOut, IfIdJmpMemOut, IfIdAluOpOut, IfIdMemReadOut, IfIdMemWrtOut, IfIdRsOut, IfIdRtOut, IfIdRdOut, IfIdSignExtendOut, r1, r2, r3, r4, r5, r6);
+
+// clock:
+input clk;
+wire clk;
+
+// inputs:
+input [31:0] IfIdInstrIn;
+input [7:0] IfIdPcBuffIn;
+input [5:0] IfIdWrtAddrIn;
+input [31:0] IfIdDataIn;
+input IfIdWrtIn;
+
+// outputs:
+output IfIdRegWrtOut, IfIdMemToRegOut, IfIdPcToRegOut, IfIdBnOut, IfIdBzOut, IfIdJmpOut, IfIdJmpMemOut,IfIdMemReadOut, IfIdMemWrtOut;
+output [3:0] IfIdAluOpOut;
+output wire [31:0] IfIdRsOut, IfIdRtOut;
+output reg [5:0] IfIdRdOut;
+output [31:0] IfIdSignExtendOut;
+output [31:0] r1, r2, r3, r4, r5, r6;
+
+// internal values
+wire [31:0] seOut;
+
+// internal components:
+signextend se(IfIdInstrIn[21:0], seOut);
+adder32 addoffset(seOut, {24'b0, IfIdPcBuffIn}, IfIdSignExtendOut);
+control ctrl(clk, IfIdInstrIn[31:28], IfIdRegWrtOut, IfIdMemToRegOut, IfIdPcToRegOut, IfIdBnOut, IfIdBzOut, IfIdJmpOut, IfIdJmpMemOut, IfIdAluOpOut, IfIdMemReadOut, IfIdMemWrtOut);
+regfile rf(clk, IfIdWrtIn, IfIdWrtAddrIn, IfIdInstrIn[21:16], IfIdInstrIn[15:10], IfIdDataIn, IfIdRsOut, IfIdRtOut, r1, r2, r3, r4, r5, r6);
+
+
+
+
+always@(negedge clk)
+    IfIdRdOut = IfIdInstrIn[27:22];
+
+endmodule

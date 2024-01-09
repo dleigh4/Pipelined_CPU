@@ -1,0 +1,40 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module ifidbuff(clk, imIn, opOut, rsOut, rtOut, rdOut, concatOut, pcIn, pcOut);
+
+// defining clock
+input clk;
+wire clk;
+
+// defining instruction memory buffer
+input [31:0] imIn;
+output reg [3:0] opOut;
+output reg [5:0] rsOut, rtOut, rdOut;
+output reg [21:0] concatOut;
+
+//defining program counter buffer
+input [7:0] pcIn;
+output reg [7:0] pcOut;
+
+
+initial
+begin
+    pcOut = 0;
+end
+
+// define behavior as clock rises:
+always@(posedge clk)
+begin
+
+    // transfer values
+    opOut = imIn[31:28];
+    rdOut = imIn[27:22];
+    rsOut = imIn[21:16];
+    rtOut = imIn[15:10];
+    concatOut = imIn[21:0];
+    pcOut = pcIn;
+        
+        
+end
+endmodule

@@ -1,0 +1,39 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module mux41b32(d1, d2, d3, d4, select1, select2, out);
+
+// define d1, d2, d3, d4 as inputs
+input [31:0] d1, d2, d3, d4;
+
+// define select bus as input
+input select1, select2;
+
+// define out to be a reg
+output reg [31:0] out;
+
+
+initial
+    out = 0;
+
+// define behavior as clock rises:
+always@(d1, d2, d3, d4, select1, select2)
+begin
+
+	// include condition for each value of select (with final else statement covering select == 2'b11)
+    if (select1 == 0)
+    begin
+        if (select2 == 0)
+            out = d1;
+        else
+            out = d2;
+    end
+    else
+    begin
+        if (select2 == 0)
+            out = d3;
+        else
+            out = d4;
+    end
+end
+endmodule

@@ -1,0 +1,79 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module exwbbuff(clk, seIn, seOut, dmIn, dmOut, rdIn, rdOut, rsrtIn, rsrtOut, bnIn, bnOut, bzIn, bzOut, jIn, jOut, jmIn, jmOut, pcrIn, pcrOut, mrIn, mrOut, rwIn, rwOut, Nin, Nout, Zin, Zout);
+
+// defining clock
+input clk;
+wire clk;
+
+// defining sign extend memory buffer
+input [31:0] seIn;
+output reg [31:0] seOut;
+
+// defining datamem buffer
+input [31:0] dmIn;
+output reg [31:0] dmOut;
+
+// defining rd memory buffer
+input [5:0] rdIn;
+output reg [5:0] rdOut;
+
+// defining rs memory buffer
+input [31:0] rsrtIn;
+output reg [31:0] rsrtOut;
+
+// defining flags memory buffer
+input bnIn, bzIn, jIn, jmIn, Nin, Zin;
+output reg bnOut, bzOut, jOut, jmOut, Nout, Zout;
+
+// defining pc to reg memory buffer
+input pcrIn;
+output reg pcrOut;
+
+// defining mem to reg memory buffer
+input mrIn;
+output reg mrOut;
+
+// defining reg write memory buffer
+input rwIn;
+output reg rwOut;
+
+initial
+begin
+    seOut = 0;
+    dmOut = 0;
+    rdOut = 0;
+    rsrtOut = 0;
+    bnOut = 0;
+    bzOut = 0;
+    jOut = 0;
+    jmOut = 0;
+    pcrOut = 0;
+    mrOut = 0;
+    rwOut = 0;  
+    Nout = 0;
+    Zout = 0;
+end
+
+// define behavior as clock rises:
+always@(posedge clk)
+begin
+
+    // transfer values
+    dmOut = dmIn;
+    seOut = seIn;
+    rdOut = rdIn;
+    rsrtOut = rsrtIn;
+    bnOut = bnIn;
+    bzOut = bzIn;
+    jOut = jIn;
+    jmOut = jmIn;
+    pcrOut = pcrIn;
+    mrOut = mrIn;
+    rwOut = rwIn;  
+    Nout = Nin;
+    Zout = Zin;
+        
+end
+endmodule

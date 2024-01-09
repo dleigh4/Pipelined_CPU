@@ -1,0 +1,94 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module idexbuff(clk, seIn, seOut, rdIn, rdOut, rsIn, rsOut, rtIn, rtOut, memwrtIn, memwrtOut, memreadIn, memreadOut, aluopIn, aluopOut, bnIn, bnOut, bzIn, bzOut, jIn, jOut, jmIn, jmOut, pcrIn, pcrOut, mrIn, mrOut, rwIn, rwOut);
+
+// defining clock
+input clk;
+wire clk;
+
+// defining sign extend memory buffer
+input [31:0] seIn;
+output reg [31:0] seOut;
+
+// defining rd memory buffer
+input [5:0] rdIn;
+output reg [5:0] rdOut;
+
+// defining rs memory buffer
+input [31:0] rsIn;
+output reg [31:0] rsOut;
+
+// defining rt memory buffer
+input [31:0] rtIn;
+output reg [31:0] rtOut;
+
+// defining mem write memory buffer
+input memwrtIn;
+output reg memwrtOut;
+
+// defining mem read memory buffer
+input memreadIn;
+output reg memreadOut;
+
+// defining alu operation memory buffer
+input [3:0] aluopIn;
+output reg [3:0] aluopOut;
+
+// defining flags memory buffer
+input bnIn, bzIn, jIn, jmIn;
+output reg bnOut, bzOut, jOut, jmOut;
+
+// defining pc to reg memory buffer
+input pcrIn;
+output reg pcrOut;
+
+// defining mem to reg memory buffer
+input mrIn;
+output reg mrOut;
+
+// defining reg write memory buffer
+input rwIn;
+output reg rwOut;
+
+
+initial
+begin
+    seOut = 0;
+    rdOut = 0;
+    rsOut = 0;
+    rtOut = 0;
+    memwrtOut = 0;
+    memreadOut = 0;
+    aluopOut = 4'b0100;
+    bnOut = 0;
+    bzOut = 0;
+    jOut = 0;
+    jmOut = 0;
+    pcrOut = 0;
+    mrOut = 0;
+    rwOut = 0;
+end
+
+// define behavior as clock rises:
+always@(posedge clk)
+begin
+
+    // transfer values
+    seOut = seIn;
+    rdOut = rdIn;
+    rsOut = rsIn;
+    rtOut = rtIn;
+    memwrtOut = memwrtIn;
+    memreadOut = memreadIn;
+    aluopOut = aluopIn;
+    bnOut = bnIn;
+    bzOut = bzIn;
+    jOut = jIn;
+    jmOut = jmIn;
+    pcrOut = pcrIn;
+    mrOut = mrIn;
+    rwOut = rwIn;  
+        
+end
+endmodule

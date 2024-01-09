@@ -1,0 +1,21 @@
+`timescale 1ns / 1ps
+
+// define and_gate variables
+module or3(d1, d2, d3, out);
+
+// define d1, d2 as inputs
+input d1 ,d2, d3;
+
+// define out to be a reg meaning a value can be assigned to it
+output reg out;
+
+initial
+    out = 0;
+
+always@(d1, d2, d3)
+begin
+    out = d1 | d2 | d3;
+end
+
+endmodule
+

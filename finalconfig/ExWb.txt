@@ -1,0 +1,51 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module ExWb(/*Input*/clk, ExWbNIn, ExWbZIn, ExWbRegWrtIn, ExWbMemToRegIn, ExWbPcToRegIn, ExWbBnIn, ExWbBzIn, ExWbJmpIn, ExWbJmpMemIn, ExWbRsRtIn, ExWbOutIn, ExWbRdIn, ExWbSignExtendIn, /*Output*/ExWbMuxSelect1, ExWbMuxSelect2, ExWbMuxOut1, ExWbMuxOut2, ExWbWrtAddrOut, ExWbDataFlagOut, ExWbWrtFlagOut);
+
+// clock:
+input clk;
+wire clk;
+
+// inputs:
+input ExWbNIn, ExWbZIn, ExWbRegWrtIn, ExWbMemToRegIn, ExWbPcToRegIn, ExWbBnIn, ExWbBzIn, ExWbJmpIn, ExWbJmpMemIn;
+input [31:0] ExWbRsRtIn, ExWbOutIn, ExWbSignExtendIn;
+input [5:0] ExWbRdIn;
+
+// outputs:
+output ExWbMuxSelect1; //
+output reg ExWbMuxSelect2;//
+output reg ExWbWrtFlagOut;//
+output reg [31:0] ExWbMuxOut1, ExWbMuxOut2; // //
+output [31:0] ExWbDataFlagOut; //
+output reg [5:0] ExWbWrtAddrOut;//
+
+// internal values
+wire [31:0] muxOut;
+wire orIn1, orIn2;
+
+
+
+// internal components:
+mux41b32 mux(ExWbRsRtIn, ExWbOutIn, ExWbSignExtendIn, 0, ExWbPcToRegIn, ExWbMemToRegIn, ExWbDataFlagOut);
+and2 andzero(ExWbNIn, ExWbBnIn, orIn1);
+and2 andnzero(ExWbZIn, ExWbBzIn, orIn2);
+or3 orOut(orIn1, orIn2, ExWbJmpIn, ExWbMuxSelect1);
+
+initial
+    ExWbMuxSelect2 = 0;
+
+always@(ExWbNIn, ExWbZIn, ExWbRegWrtIn, ExWbMemToRegIn, ExWbPcToRegIn, ExWbBnIn, ExWbBzIn, ExWbJmpIn, ExWbJmpMemIn, ExWbRsRtIn, ExWbOutIn, ExWbSignExtendIn, ExWbRdIn)
+begin
+    ExWbMuxOut1 = ExWbRsRtIn;
+    ExWbMuxOut2 = ExWbOutIn;
+    
+    ExWbWrtFlagOut = ExWbRegWrtIn;
+    ExWbMuxSelect2 = ExWbJmpMemIn;
+    
+    ExWbWrtAddrOut = ExWbRdIn;
+    
+end
+
+
+endmodule

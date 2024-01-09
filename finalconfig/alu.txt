@@ -1,0 +1,64 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module alu(a, b, op, n, z, out);
+
+// define a and b as bus inputs
+input [31:0] a;
+input [31:0] b;
+
+// define opcode as bus input
+input [3:0] op;
+
+// define n and z flags as regs
+output reg n;
+output reg z;
+
+// define out to be a bus reg
+output reg [31:0] out;
+
+
+
+initial
+    out = 0;
+
+// define behavior as inputs update:
+always@(a, b, op)
+begin
+
+	// operation: ADD
+    if (op == 4'b0000)
+        out = a + b;
+    
+    // operation: INCREMENT
+    else if (op == 4'b0001)
+        out = a + 1;
+        
+    // operation: NEGATE
+    else if (op == 4'b0010)
+        out = ~a + 1;
+        
+    // operation: SUBTRACT
+    else if (op == 4'b0011)
+        out = a + ~b + 1;
+    
+    // operation: PASS A
+    else
+        out = a;
+    
+    
+    // set flags 
+    if (op != 4'b0100)
+    begin   
+        if (out == 0)
+            z = 1;
+        else
+            z = 0;
+        
+        if (out[31] == 1)
+            n = 1;
+        else
+            n = 0;
+    end  
+end
+endmodule

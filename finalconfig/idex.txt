@@ -1,0 +1,65 @@
+`timescale 1ns / 1ps
+
+// define mux variables
+module idex(/*Input*/clk, IdExRegWrtIn, IdExMemToRegIn, IdExPcToRegIn, IdExBnIn, IdExBzIn, IdExJmpIn, IdExJmpMemIn, IdExAluOpIn, IdExMemReadIn, IdExMemWrtIn, IdExRsIn, IdExRtIn, IdExRdIn, IdExSignExtendIn, /*Output*/ IdExNOut, IdExZOut, IdExRegWrtOut, IdExMemToRegOut, IdExPcToRegOut, IdExBnOut, IdExBzOut,IdExJmpOut, IdExJmpMemOut, IdExRsRtOut, IdExOutOut, IdExRdOut, IdExSignExtendOut, atloc100);
+
+// clock:
+input clk;
+wire clk;
+
+// passing control signals:
+input IdExRegWrtIn, IdExMemToRegIn, IdExPcToRegIn, IdExBnIn, IdExBzIn, IdExJmpIn, IdExJmpMemIn,IdExMemReadIn, IdExMemWrtIn;
+input [3:0] IdExAluOpIn;
+
+// values
+input [31:0] IdExRsIn, IdExRtIn, IdExSignExtendIn;
+input [5:0] IdExRdIn;
+
+// outputs signals
+output reg IdExRegWrtOut, IdExMemToRegOut, IdExPcToRegOut, IdExBnOut, IdExBzOut,IdExJmpOut, IdExJmpMemOut;
+output reg IdExNOut, IdExZOut;
+output wire [31:0] IdExRsRtOut, IdExOutOut, atloc100;
+output reg [31:0] IdExSignExtendOut;
+output reg [5:0] IdExRdOut;
+
+wire N, Z;
+
+// internal components:
+alu arith(IdExRsIn, IdExRtIn, IdExAluOpIn, N, Z, IdExRsRtOut);
+datamem mem(clk, IdExMemReadIn, IdExMemWrtIn, IdExRsIn, IdExRtIn, IdExOutOut, atloc100);
+
+initial
+begin    
+    IdExRegWrtOut = 0;
+    IdExMemToRegOut = 0;
+    IdExPcToRegOut = 0;
+    IdExBnOut = 0;
+    IdExBzOut = 0;
+    IdExJmpOut = 0;
+    IdExJmpMemOut = 0;
+    IdExSignExtendOut = 0;
+    IdExRdOut = 0;
+    IdExNOut = 0;
+    IdExZOut = 0;
+end
+
+always@(negedge clk)
+begin
+    IdExRegWrtOut = IdExRegWrtIn;
+    IdExMemToRegOut = IdExMemToRegIn;
+    IdExPcToRegOut = IdExPcToRegIn;
+    IdExBnOut = IdExBnIn;
+    IdExBzOut = IdExBzIn;
+    IdExJmpOut = IdExJmpIn;
+    IdExJmpMemOut = IdExJmpMemIn;
+    IdExSignExtendOut = IdExSignExtendIn;
+    IdExRdOut = IdExRdIn;
+end
+
+always@(N, Z)
+begin
+    IdExNOut = N;
+    IdExZOut = Z;
+end
+
+endmodule

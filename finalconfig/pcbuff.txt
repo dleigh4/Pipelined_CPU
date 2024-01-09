@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module pcbuff(clk, pcbuffIn, pcbuffOut);
+
+// defining clock
+input clk;
+wire clk;
+
+
+input [7:0] pcbuffIn;
+output reg [7:0] pcbuffOut;
+
+initial
+begin
+    pcbuffOut = 0;
+    
+end
+// define behavior as clock rises:
+always@(negedge clk)
+begin
+
+    // transfer values
+    pcbuffOut = pcbuffIn;
+        
+end
+endmodule

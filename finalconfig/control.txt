@@ -1,0 +1,229 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module control(clk, op, rw, mr, pcr, bn, bz, j, jm, aluop, memread, memwrt);
+
+// defining clock
+input clk;
+wire clk;
+
+// input: opcode
+input [3:0] op;
+
+// outputs:
+output reg rw;
+output reg mr;
+output reg pcr;
+output reg bn;
+output reg bz;
+output reg j;
+output reg jm;
+output reg [3:0] aluop;
+output reg memread;
+output reg memwrt;
+
+
+
+initial
+begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+end
+
+
+// define behavior as clock rises:
+always@(negedge clk)
+begin
+
+    // defining behavior by opcode
+    
+    // No operation
+    if (op == 4'b0000)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Load PC: requires reg write and pc to reg
+    else if (op == 4'b1111)
+    begin
+        rw = 1;
+        mr = 0;
+        pcr = 1;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Load: requires reg write, mem to reg, and mem read
+    else if (op == 4'b1110)
+    begin
+        rw = 1;
+        mr = 1;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 1;
+        memwrt = 0;
+    end
+    
+    // Store: requires mem write
+    else if (op == 4'b0011)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 1;
+    end
+    
+    // Add: requires reg write, alu addition
+    else if (op == 4'b0100)
+    begin
+        rw = 1;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0000;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Increment: requires reg write, alu incrementation
+    else if (op == 4'b0101)
+    begin
+        rw = 1;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0001;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Negate: requires reg write, alu negation
+    else if (op == 4'b0110)
+    begin
+        rw = 1;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0010;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Subtract: requires reg write, alu subtraction
+    else if (op == 4'b0111)
+    begin
+        rw = 1;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0011;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Jump: requires jump
+    else if (op == 4'b1000)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 1;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Branch if zero: requires branch zero, alu pass
+    else if (op == 4'b1001)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 1;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+    end
+    
+    // Jump memory: requires jump mem, mem read
+    else if (op == 4'b1010)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 0;
+        bz = 0;
+        j = 0;
+        jm = 1;
+        aluop = 4'b0100;
+        memread = 1;
+        memwrt = 0;
+    end
+    
+    // Branch if negative: requires branch neg, alu pass
+    else if (op == 4'b1011)
+    begin
+        rw = 0;
+        mr = 0;
+        pcr = 0;
+        bn = 1;
+        bz = 0;
+        j = 0;
+        jm = 0;
+        aluop = 4'b0100;
+        memread = 0;
+        memwrt = 0;
+    end
+        
+end
+endmodule

@@ -1,0 +1,28 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module signextend(seIn, seOut);
+
+input [21:0] seIn;
+output reg [31:0] seOut;
+
+
+initial
+    seOut = 0;
+
+// define behavior as clock rises:
+always@(seIn)
+begin
+
+    // transfer values
+    seOut[21:0] = seIn[21:0];
+    
+    // check sign; set values based on result
+    if (seIn[21] == 1)
+        seOut[31:22] = 10'b1111111111;
+    
+    else
+        seOut[31:22] = 10'b0000000000;
+        
+end
+endmodule

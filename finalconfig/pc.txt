@@ -1,0 +1,28 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module pc(clk, pcIn, pcOut);
+
+// defining clock
+input clk;
+wire clk;
+
+
+input [15:0] pcIn;
+output reg [15:0] pcOut;
+
+// initialize at 0
+initial
+begin
+    pcOut = 0;
+ end
+ 
+// define behavior as clock rises:
+always@(negedge clk)
+begin
+
+    // transfer values
+    pcOut = pcIn;
+        
+end
+endmodule

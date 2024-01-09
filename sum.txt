@@ -1,0 +1,56 @@
+	data[0] = {4'b1111, 6'b001000, 6'b000000, 6'b000000, 10'b0100000000}	/* load lower index address (256) into r8 */;
+	data[1] = {4'b1111, 6'b000101, 6'b000000, 6'b000000, 10'b0000001000}	/* load label 1 address (9) into r5 */;
+	data[2] = {4'b1111, 6'b000110, 6'b000000, 6'b000000, 10'b0000010101}	/* load label 2 address (23) into r6 */;
+	data[3] = {4'b0101, 6'b001001, 6'b001000, 6'b000000, 10'b0000000000} 	/* increment lower index address to get upper index address (257) */;
+	data[4] = {4'b1110, 6'b000010, 6'b001000, 6'b000000, 10'b0000000000}	/* load lower index into r2 */;
+	data[5] = {4'b0111, 6'b000001, 6'b001000, 6'b001000, 10'b0000000000}	/* set r1 to 0 */;
+	data[6] = {4'b1110, 6'b000011, 6'b001001, 6'b000000, 10'b0000000000}	/* load upper index into r3 */;
+	data[7] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[8] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[9] = {4'b0111, 6'b000111, 6'b000011, 6'b000010, 10'b0000000000}	/* label 1: compare current location to upper bound */;
+	data[10] = {4'b1001, 6'b000000, 6'b000110, 6'b000000, 10'b0000000000}	/* branch if upper bound reached */;
+	data[11] = {4'b1011, 6'b000000, 6'b000110, 6'b000000, 10'b0000000000}	/* branch if upper bound surpassed (not sure if it's in scope?) */;
+	data[12] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[13] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[14] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[15] = {4'b1110, 6'b000100, 6'b000010, 6'b000000, 10'b0000000000}	/* load current value (at r2) into r4 */;
+	data[16] = {4'b0101, 6'b000010, 6'b000010, 6'b000000, 10'b0000000000}	/* increment r2 */;
+	data[17] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[18] = {4'b0100, 6'b000001, 6'b000001, 6'b000100, 10'b0000000000}	/* add value to r1 */;
+	data[19] = {4'b1000, 6'b000000, 6'b000101, 6'b000000, 10'b0000000000}	/* continue looping*/;
+	data[20] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[21] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[22] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[23] = {4'b1000, 6'b000000, 6'b000110, 6'b000000, 10'b0000000000}	/* label 2: loop to denote end of execution */;
+	data[24] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[25] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+	data[26] = {4'b0000, 6'b000000, 6'b000000, 6'b000000, 10'b0000000000}	/* NOP */;
+
+
+LDPC r8, a 	/* load lower index address into r8 */
+LDPC r5, label1 /* load label 1 address into r5 */
+LDPC r6, label2 /* load label 2 address into r6 */
+INC r9, r8 	/* increment lower index address to get upper index address */
+LD r2, r8	/* load lower index into r2 */
+SUB r1, r8, r8	/* set r1 to 0 */
+LD r3, r9	/* load upper index into r3 */
+NOP
+NOP
+SUB r7, r4, r3	/* label 1: compare current location to upper bound */
+BRZ r6		/* branch if upper bound reached */
+BRN r6		/* branch if upper bound surpassed (not sure if it's in scope?) */
+NOP
+NOP
+NOP
+LD r4, r2	/* load current value (at r2) into r4 */
+INC r2, r2	/* increment r2 */
+NOP
+ADD r1, r1, r4	/* add value to r1 */
+J r5		/* continue looping */
+NOP
+NOP
+NOP
+J r6		/* label 2: loop to denote end of execution */
+NOP
+NOP
+NOP

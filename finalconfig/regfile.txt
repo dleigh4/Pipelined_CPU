@@ -1,0 +1,74 @@
+`timescale 1ns / 1ps
+
+// define regfile variables
+module regfile(clk, wrt, rdin, rsin, rtin, datain, rsout, rtout, r1, r2, r3, r4, r5, r6);
+
+// defining clock
+input clk;
+wire clk;
+
+// defining write input
+input wrt;
+
+// define register addresses as bus inputs
+input [5:0] rdin;
+input [5:0] rsin;
+input [5:0] rtin;
+
+// define datain as bus input
+input [31:0] datain;
+
+// define output data as bus registers
+output reg [31:0] rsout;
+output reg [31:0] rtout;
+
+// define internal file as register array
+reg [31:0] data [63:0];
+
+
+// expose R1-R6
+output reg [31:0] r1, r2, r3, r4, r5, r6;
+
+
+
+initial
+begin
+    data[0] = 0;
+    rsout = 0;
+    rtout = 0;
+    r1 = 0;
+    r2 = 0;
+    r3 = 0;
+    r4 = 0;
+    r5 = 0;
+    r6 = 0;
+end
+
+
+// define behavior as clock rises:
+always@(negedge clk)
+begin
+
+    
+    // if write active, update register
+    if (wrt == 1)
+        data[rdin] = datain;
+
+    // update outputs
+    rsout = data[rsin];
+    rtout = data[rtin];
+    
+end
+
+
+always@(data[1], data[2], data[3], data[4], data[5], data[6])
+begin
+    r1 = data[1];
+    r2 = data[2];
+    r3 = data[3];
+    r4 = data[4];
+    r5 = data[5];
+    r6 = data[6];
+end
+
+endmodule

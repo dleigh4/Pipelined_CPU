@@ -1,0 +1,72 @@
+`timescale 1ns / 1ps
+
+// define data memory variables
+module datamem(clk, read, wrt, addr, datain, dataout, atloc100);
+
+// defining clock
+input clk;
+wire clk;
+
+// defining read and write inputs
+input wire read, wrt;
+
+// define address and data input as bus inputs
+input [31:0] addr;
+input [31:0] datain;
+
+// define data output as bus register
+output reg [31:0] dataout;
+
+// define internal memory as array; had to shrink size from 65536 because of error
+reg [31:0] data [16384:0];
+
+
+// buffer address
+reg [15:0] intaddr;
+
+// expose location 100
+output reg [31:0] atloc100;
+
+
+initial
+begin
+    dataout = 0;
+    data[256] = 0;
+    data[257] = 5;
+    data[0] = 1;
+    data[1] = 1;
+    data[2] = 1;
+    data[3] = 1;
+    data[4] = 1;
+    data[5] = 1;
+    data[6] = 1;
+    intaddr = 0;
+end
+
+always@(addr)
+    intaddr = addr[15:0];
+begin
+
+end
+
+// define behavior as clock rises:
+always@(negedge clk)
+begin
+
+    if (read == 1)
+    begin
+        dataout = data[intaddr];
+    end
+    
+    if (wrt == 1)
+    begin
+        data[intaddr] = datain;
+    end
+        
+        
+end
+
+always@(data[256])
+    atloc100 = data[256];
+
+endmodule
